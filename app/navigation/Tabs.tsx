@@ -1,58 +1,68 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useLayoutEffect } from "react";
+import React from "react";
+import { useColorScheme } from "react-native";
+import { BLACK_COLOR, DARK_GREY, LIGHT_GREY, YELLOW_COLOR } from "../colors";
 import Movies from "../screens/Movies/Movies";
 
-const Tabs = createBottomTabNavigator();
 
-const getHeaderName = (route) =>
-  route?.state?.routeNames[route.state.index] || "Movies";
+const Tab = createBottomTabNavigator();
 
-export default ({ navigation, route }) => {
-  useLayoutEffect(() => {
-    const name = getHeaderName(route);
-    navigation.setOptions({
-      title: name,
-    });
-  }, [route]);
-
+const Tabs = () => {
+  const isDark = useColorScheme() === "dark";
   return (
-    <Tabs.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused }) => {
-          // let iconName = Platform.OS === "ios" ? "ios-" : "md-";
-          let iconName = "";
-          if (route.name === "Movies") {
-            iconName += "film";
-          } else if (route.name === "TV") {
-            iconName += "tv";
-          } else if (route.name === "Search") {
-            iconName += "search";
-          } else if (route.name === "Discovery") {
-            iconName += "heart";
-          }
-          return (
-            <Ionicons
-              name={iconName}
-              color={focused ? "white" : "grey"}
-              size={26}
-            />
-          );
+    <Tab.Navigator
+      sceneContainerStyle={{
+        backgroundColor: isDark ? BLACK_COLOR : "white",
+      }}
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: isDark ? BLACK_COLOR : "white",
         },
-      })}
-      // tabBarOptions={{
-      //   showLabel: false,
-
-      //   style: {
-      //     backgroundColor: "black",
-      //     borderTopColor: "black"
-      //   }
-      // }}
+        tabBarActiveTintColor: isDark ? YELLOW_COLOR : BLACK_COLOR,
+        tabBarInactiveTintColor: isDark ? DARK_GREY : LIGHT_GREY,
+        headerStyle: {
+          backgroundColor: isDark ? BLACK_COLOR : "white",
+        },
+        headerTitleStyle: {
+          color: isDark ? "white" : BLACK_COLOR,
+        },
+        tabBarLabelStyle: {
+          marginTop: -5,
+          fontSize: 10,
+          fontWeight: "600",
+        },
+      }}
     >
-      <Tabs.Screen name="Movies" component={Movies} />
-      {/* <Tabs.Screen name="TV" component={Tv} />
-      <Tabs.Screen name="Search" component={Search} />
-      <Tabs.Screen name="Discovery" component={Favs} /> */}
-    </Tabs.Navigator>
+      <Tab.Screen
+        name="Movies"
+        component={Movies}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name={"film-outline"} color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="TV"
+        component={Tv}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="tv-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={Search}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name={"search-outline"} color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 };
+
+export default Tabs;

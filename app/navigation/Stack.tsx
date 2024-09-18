@@ -1,26 +1,28 @@
-import { Ionicons } from "@expo/vector-icons";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import Tabs from "./Tabs";
+import { useColorScheme } from "react-native";
+import { BLACK_COLOR } from "../colors";
+import Detail from "../screens/Detail";
 
-const Stack = createStackNavigator();
+const NativeStack = createNativeStackNavigator();
 
-export default () => (
-  <Stack.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "black",
-        borderBottomColor: "black",
-        shadowColor: "black",
-      },
-      headerTintColor: "#FFFFFF",
-      headerBackTitleVisible: false,
-      headerBackImage: () => (
-        <Ionicons name="arrow-back" color={"white"} size={26} />
-      ),
-    }}
-  >
-    <Stack.Screen name="Tab" component={Tabs} />
-    {/* <Stack.Screen name="Detail" component={Detail} /> */}
-  </Stack.Navigator>
-);
+const Stack = () => {
+  const isDark = useColorScheme() === "dark";
+  return (
+    <NativeStack.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false,
+        headerStyle: {
+          backgroundColor: isDark ? BLACK_COLOR : "white",
+        },
+        headerTitleStyle: {
+          color: isDark ? "white" : BLACK_COLOR,
+        },
+      }}
+    >
+      <NativeStack.Screen name="Detail" component={Detail} />
+    </NativeStack.Navigator>
+  );
+};
+
+export default Stack;
