@@ -1,7 +1,7 @@
 import Poster from "@/components/Poster";
 import Slide from "@/components/Slide";
 import React, { FC, useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions } from "react-native";
+import { ActivityIndicator, Dimensions, RefreshControl } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/lib/typescript/native-stack/types";
 import Swiper from "react-native-swiper";
 import styled from "styled-components/native";
@@ -85,6 +85,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const Movies: FC<NativeStackScreenProps<any, "Movies">> = () => {
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [popular, setPopular] = useState([]);
@@ -145,12 +146,22 @@ const Movies: FC<NativeStackScreenProps<any, "Movies">> = () => {
     getData();
   }, []);
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getData();
+    setRefreshing(false);
+  };
+
   return loading ? (
     <Loader>
       <ActivityIndicator size="small" />
     </Loader>
   ) : (
-    <Container>
+    <Container
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <Swiper
         loop
         horizontal
