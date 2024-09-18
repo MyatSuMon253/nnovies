@@ -61,7 +61,24 @@ const HMovie = styled.View`
 `;
 
 const HColumn = styled.View`
-  mar
+  margin-left: 15px;
+  width: 80%;
+`;
+
+const Overview = styled.Text`
+  color: white;
+  opacity: 0.8;
+  width: 80%;
+`;
+
+const Release = styled.Text`
+  color: white;
+  font-size: 12px;
+  margin-vertical: 10;
+`;
+
+const ComingSoonTitle = styled(ListTitle)`
+  margin-bottom: 30px;
 `;
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -181,12 +198,20 @@ const Movies: FC<NativeStackScreenProps<any, "Movies">> = () => {
           ))}
         </TrendingScroll>
       </ListContainer>
-      <ListTitle>Coming Soon</ListTitle>
+      <ComingSoonTitle>Coming Soon</ComingSoonTitle>
       {upcoming?.map((movie) => (
         <HMovie key={movie.id}>
           <Poster path={movie.poster_path} />
           <HColumn>
             <Title>{movie.original_title}</Title>
+            <Overview>
+              {movie.overview !== "" && movie.overview.length > 80
+                ? `${movie.overview.slice(0, 140)}...`
+                : movie.overview}
+            </Overview>
+            <Release>
+              {new Date(movie.release_date).toLocaleDateString("en")}
+            </Release>
           </HColumn>
         </HMovie>
       ))}
